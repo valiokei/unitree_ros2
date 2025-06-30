@@ -10,7 +10,8 @@ setup(
     version='0.0.0',
     packages=find_packages(exclude=['test']),
     py_modules=['unitree_teleop.unitree_teleop_twist', 
-                'unitree_teleop.unitree_teleop_set_control_mode'],
+                'unitree_teleop.unitree_teleop_set_control_mode',
+                'unitree_teleop.simple_robot_simulator'],
     data_files=[
         ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
@@ -32,7 +33,8 @@ setup(
     entry_points={
         'console_scripts': [
             'unitree_teleop_twist = unitree_teleop.unitree_teleop_twist:main',
-            'unitree_teleop_set_control_mode = unitree_teleop.unitree_teleop_set_control_mode:main'
+            'unitree_teleop_set_control_mode = unitree_teleop.unitree_teleop_set_control_mode:main',
+            'simple_robot_simulator = unitree_teleop.simple_robot_simulator:main'
         ],
     },
 )

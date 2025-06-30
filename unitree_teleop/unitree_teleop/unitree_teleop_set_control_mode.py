@@ -44,10 +44,10 @@ def response_to_str(mode):
 def main(args=None):
     rclpy.init(args=args)
     node = rclpy.create_node('unitree_set_control_mode')
-    cli = node.create_client(SetControlMode, 'unitree_controller/set_control_mode')
+    cli = node.create_client(SetControlMode, '/set_control_mode')
 
     request = SetControlMode.Request()
-    request.control_mode = 0
+    request.control_mode = '0'
     while not cli.wait_for_service(timeout_sec=1.0):
         node.get_logger().info('service SetControlMode not available, waiting again...')
 
@@ -56,7 +56,7 @@ def main(args=None):
     while rclpy.ok():
         key = getKey()
         if key in ['0', '1', '2', '3', '4']:
-            request.control_mode = int(key)
+            request.control_mode = key
             print(request_to_str(request.control_mode))
 
             future = cli.call_async(request)

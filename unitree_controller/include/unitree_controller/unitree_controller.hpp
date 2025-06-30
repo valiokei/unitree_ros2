@@ -7,6 +7,7 @@
 #include "unitree_controller/pd_controller.hpp"
 
 #include "unitree_msgs/srv/set_control_mode.hpp"
+#include "geometry_msgs/msg/twist.hpp"
 #include "realtime_tools/realtime_buffer.hpp"
 
 
@@ -26,6 +27,8 @@ private:
 
   controller_interface::CallbackReturn read_parameters() override;
 
+  controller_interface::CallbackReturn on_configure(const rclcpp_lifecycle::State & previous_state) override;
+
   std::vector<std::string> get_joint_names() const override;
 
   std::vector<std::string> get_sensor_names() const override;
@@ -42,13 +45,18 @@ private:
 
   // Runtime controllers 
   ControlMode control_mode_;
-  PDController zero_torque_controller_, standing_up_controller_, sitting_down_controller_;
+  PDController zero_torque_controller_, standing_up_controller_, idling_controller_, sitting_down_controller_;
 
   // Services
   rclcpp::Service<unitree_msgs::srv::SetControlMode>::SharedPtr set_control_mode_srv_;
   realtime_tools::RealtimeBuffer<ControlMode> control_mode_rt_buffer_;
   void setControlModeCallback(const std::shared_ptr<unitree_msgs::srv::SetControlMode::Request> request,
                               std::shared_ptr<unitree_msgs::srv::SetControlMode::Response> response);
+
+  // Twist command subscriber
+  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
+  realtime_tools::RealtimeBuffer<geometry_msgs::msg::Twist> cmd_vel_buffer_;
+  void cmdVelCallback(const geometry_msgs::msg::Twist::SharedPtr msg);
 };
 
 } // namespace unitree_controller

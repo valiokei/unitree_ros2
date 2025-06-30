@@ -68,6 +68,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-pluginlib_export_plugin_description_file(gazebo_ros2_control unitree_gazebo_hardware_plugin.xml)
+pluginlib_export_plugin_description_file(hardware_interface unitree_gazebo_hardware_plugin.xml)
 
 ament_package()

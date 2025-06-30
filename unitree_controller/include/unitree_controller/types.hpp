@@ -98,6 +98,7 @@ struct UnitreeCommands
 enum class ControlMode {
   ZeroTorque,
   StandingUp,
+  Idling,
   Control,
   SittingDown,
 };
@@ -110,6 +111,9 @@ inline std::string FromControlModeToString(const ControlMode control_mode) {
     break;
   case ControlMode::StandingUp:
     return "StandingUp";
+    break;
+  case ControlMode::Idling:
+    return "Idling";
     break;
   case ControlMode::Control:
     return "Control";
@@ -125,20 +129,23 @@ inline std::string FromControlModeToString(const ControlMode control_mode) {
 }
 
 inline ControlMode FromStringToControlMode(const std::string& control_mode) {
-  if (control_mode == "ZeroTorque" || control_mode == "zero_torque") {
+  if (control_mode == "ZeroTorque" || control_mode == "zero_torque" || control_mode == "0") {
     return ControlMode::ZeroTorque;
   }
-  else if (control_mode == "StandingUp" || control_mode == "standing_up") {
+  else if (control_mode == "StandingUp" || control_mode == "standing_up" || control_mode == "1") {
     return ControlMode::StandingUp;
   }
-  else if (control_mode == "Control" || control_mode == "control") {
+  else if (control_mode == "Idling" || control_mode == "idling" || control_mode == "2") {
+    return ControlMode::Idling;
+  }
+  else if (control_mode == "Control" || control_mode == "control" || control_mode == "3") {
     return ControlMode::Control;
   }
-  else if (control_mode == "SittingDown" || control_mode == "sitting_down") {
+  else if (control_mode == "SittingDown" || control_mode == "sitting_down" || control_mode == "4") {
     return ControlMode::SittingDown;
   }
   else {
-    throw std::runtime_error("Invalid ControlMode");
+    throw std::runtime_error("Invalid ControlMode: " + control_mode);
     return ControlMode::ZeroTorque;
   }
 }

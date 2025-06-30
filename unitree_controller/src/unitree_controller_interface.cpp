@@ -69,8 +69,7 @@ UnitreeControllerInterface::state_interface_configuration() const
   controller_interface::InterfaceConfiguration conf;
   conf.type = controller_interface::interface_configuration_type::INDIVIDUAL;
   conf.names.reserve(joint_names.size() * joint_state_interface_types.size()  // Joint states
-                      + 4 + 3 + 3  // Imu states (quat + gyro + acc)
-                      + 4); // Foot force sensors 
+                      + 4 + 3 + 3); // Imu states (quat + gyro + acc) 
   // Joint state
   for (const auto & joint_name : joint_names)
   {
@@ -90,11 +89,7 @@ UnitreeControllerInterface::state_interface_configuration() const
   conf.names.push_back(sensor_names[0] + "/" + "linear_acceleration.x");
   conf.names.push_back(sensor_names[0] + "/" + "linear_acceleration.y");
   conf.names.push_back(sensor_names[0] + "/" + "linear_acceleration.z");
-  // Foot force sensor states
-  conf.names.push_back(sensor_names[1] + "/" + "force.z");
-  conf.names.push_back(sensor_names[2] + "/" + "force.z");
-  conf.names.push_back(sensor_names[3] + "/" + "force.z");
-  conf.names.push_back(sensor_names[4] + "/" + "force.z");
+  // Note: Foot force sensor states removed for Gazebo compatibility
   return conf;
 }
 
@@ -126,9 +121,20 @@ controller_interface::return_type UnitreeControllerInterface::update(
     states_.imu_linear_acceleration.coeffRef(i) = imu_linear_acceleration_interface_[i].get().get_value();
   }
   // get foor force sensor states 
-  for (std::size_t i = 0 ; i < 4; ++i) 
+  if (foot_force_sensor_interface_.size() == 4) 
   {
-    states_.foot_force_sensor.coeffRef(i) = foot_force_sensor_interface_[i].get().get_value();
+    for (std::size_t i = 0 ; i < 4; ++i) 
+    {
+      states_.foot_force_sensor.coeffRef(i) = foot_force_sensor_interface_[i].get().get_value();
+    }
+  }
+  else 
+  {
+    // Set foot force sensor values to zero if not available
+    for (std::size_t i = 0 ; i < 4; ++i) 
+    {
+      states_.foot_force_sensor.coeffRef(i) = 0.0;
+    }
   }
 
   // update controller
@@ -247,10 +253,11 @@ UnitreeControllerInterface::on_activate(const rclcpp_lifecycle::State &)
   }
   if (foot_force_sensor_interface_.size() != 4) 
   {
-    RCLCPP_ERROR(
-      get_node()->get_logger(), "Expected %zu foot_force_interface, got %zu.", 
+    RCLCPP_WARN(
+      get_node()->get_logger(), "Expected %zu foot_force_interface, got %zu. Continuing without force sensors.", 
       4, foot_force_sensor_interface_.size());
-    return controller_interface::CallbackReturn::ERROR;
+    // Clear the foot force sensor interface if not all are available
+    foot_force_sensor_interface_.clear();
   }
 
   // Joint command interfaces
