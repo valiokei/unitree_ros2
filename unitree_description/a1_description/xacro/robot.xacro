@@ -46,7 +46,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="$(find a1_description)/meshes/trunk.dae" scale="1 1 1"/>
+                <mesh filename="package://a1_description/meshes/trunk.dae" scale="${mesh_scale}"/>
             </geometry>
             <material name="orange"/>
         </visual>

@@ -15,7 +15,7 @@ UnitreeController::UnitreeController()
   standing_up_controller_(PDController::StandingUpController()), 
   sitting_down_controller_(PDController::SittingDownController())
 {
-  set_contro_mode_srv_ = get_node()->create_service()<unitree_msgs::srv::SetControMode>(
+  set_control_mode_srv_ = get_node()->create_service<unitree_msgs::srv::SetControlMode>(
       "set_control_mode", std::bind(&UnitreeController::setControlModeCallback, this, std::placeholders::_1, std::placeholders::_2));
 }
 
@@ -73,7 +73,7 @@ controller_interface::return_type UnitreeController::update(
     const rclcpp::Time & time, const rclcpp::Duration & period,
     const UnitreeStates & states, UnitreeCommands & commands) 
 {
-  control_mode_ = control_mode_rt_buffer_.readFromRT();
+  control_mode_ = *control_mode_rt_buffer_.readFromRT();
 
   switch (control_mode_)
   {
@@ -113,9 +113,9 @@ controller_interface::return_type UnitreeController::update(
   return controller_interface::return_type::ERROR;
 }
 
-void UnitreeController::setControlModeCallback(const std::shared_ptr<unitree_msgs::srv::SetControMode::Request> request,
-                                               std::shared_ptr<unitree_msgs::srv::SetControMode::Response> response) {
-  response->current_control_mode = FromControlModeToString(control_mode_rt_buffer_.readFromNonRT());
+void UnitreeController::setControlModeCallback(const std::shared_ptr<unitree_msgs::srv::SetControlMode::Request> request,
+                                               std::shared_ptr<unitree_msgs::srv::SetControlMode::Response> response) {
+  response->current_control_mode = FromControlModeToString(*control_mode_rt_buffer_.readFromNonRT());
   control_mode_rt_buffer_.writeFromNonRT(FromStringToControlMode(request->control_mode));
   response->accept = true;
 }

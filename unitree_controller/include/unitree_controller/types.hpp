@@ -102,20 +102,20 @@ enum class ControlMode {
   SittingDown,
 };
 
-std::string FromControlModeToString(const ControlMode control_mode) {
+inline std::string FromControlModeToString(const ControlMode control_mode) {
   switch (control_mode)
   {
   case ControlMode::ZeroTorque:
-    return "ZeroTorque"
+    return "ZeroTorque";
     break;
   case ControlMode::StandingUp:
-    return "StandingUp"
+    return "StandingUp";
     break;
   case ControlMode::Control:
-    return "Control"
+    return "Control";
     break;
   case ControlMode::SittingDown:
-    return "SittingDown"
+    return "SittingDown";
     break;
   default:
     throw std::runtime_error("Invalid ControlMode");
@@ -124,7 +124,7 @@ std::string FromControlModeToString(const ControlMode control_mode) {
   }
 }
 
-ControlMode FromStringToControlMode(const std::string& control_mode) {
+inline ControlMode FromStringToControlMode(const std::string& control_mode) {
   if (control_mode == "ZeroTorque" || control_mode == "zero_torque") {
     return ControlMode::ZeroTorque;
   }
@@ -139,7 +139,7 @@ ControlMode FromStringToControlMode(const std::string& control_mode) {
   }
   else {
     throw std::runtime_error("Invalid ControlMode");
-    return ControlMode::ZeroTorque:
+    return ControlMode::ZeroTorque;
   }
 }
 

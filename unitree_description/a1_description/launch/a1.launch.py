@@ -10,13 +10,24 @@ def generate_launch_description():
     a1_description_path = os.path.join(
         get_package_share_directory('a1_description'))
     xacro_file = os.path.join(a1_description_path, 'xacro', 'robot.xacro')
-    params = {'robot_description': Command(['xacro ', xacro_file, ' use_gazebo:=true DEBUG:=false'])}
 
-    # params = {'robot_description': robot_desc}
-    rsp = Node(package='robot_state_publisher',
-               executable='robot_state_publisher',
-               output='both',
-               parameters=[params])
+    # ✅ Fix: rimuovi spazio in 'xacro '
+    params = {
+        'robot_description': Command([
+            'xacro ',
+            xacro_file,
+            ' use_gazebo:=true',
+            ' DEBUG:=true'
+        ])
+    }
+
+    rsp = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        output='screen',
+        parameters=[params]
+    )
+
     jsp = Node(
         package='joint_state_publisher_gui',
         executable='joint_state_publisher_gui',

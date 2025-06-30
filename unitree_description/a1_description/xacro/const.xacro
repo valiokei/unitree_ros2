@@ -5,6 +5,10 @@
     <!-- Constants for robot dimensions -->
     <xacro:property name="PI" value="3.1415926535897931"/>
     <xacro:property name="stick_mass" value="0.00001"/>
+    
+    <!-- Mesh scale correction: meshes are authored in millimeters but interpreted as meters -->
+    <!-- Apply 0.001 scale factor to convert from mm to m -->
+    <xacro:property name="mesh_scale" value="1 1 1"/>
 
     <!-- simplified collision value -->
     <xacro:property name="trunk_width" value="0.194"/> 

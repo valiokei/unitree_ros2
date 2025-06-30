@@ -20,7 +20,8 @@ find_package(ament_cmake REQUIRED)
 find_package(hardware_interface REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(lcm REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LCM REQUIRED lcm)
 
 add_library(unitree_legged_sdk_amd64 SHARED IMPORTED)
 set_target_properties(
@@ -42,7 +43,7 @@ target_link_libraries(
   ${hardware_interface_LIBRARIES}
   ${pluginlib_LIBRARIES}
   ${rclcpp_LIBRARIES}
-  lcm
+  ${LCM_LIBRARIES}
   unitree_legged_sdk_amd64
 )
 target_include_directories(
@@ -51,6 +52,7 @@ target_include_directories(
   ${hardware_interface_INCLUDE_DIRS}
   ${pluginlib_INCLUDE_DIRS}
   ${rclcpp_INCLUDE_DIRS}
+  ${LCM_INCLUDE_DIRS}
 )
 
 pluginlib_export_plugin_description_file(hardware_interface unitree_hardware.xml)

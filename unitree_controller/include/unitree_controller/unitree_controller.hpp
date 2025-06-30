@@ -6,8 +6,8 @@
 #include "unitree_controller/visibility_control.h"
 #include "unitree_controller/pd_controller.hpp"
 
-#include "unitree_msgs/srv/SetControlMode.hpp"
-#include "realtime_tools/realtime_buffer.h"
+#include "unitree_msgs/srv/set_control_mode.hpp"
+#include "realtime_tools/realtime_buffer.hpp"
 
 
 namespace unitree_controller
@@ -45,10 +45,10 @@ private:
   PDController zero_torque_controller_, standing_up_controller_, sitting_down_controller_;
 
   // Services
-  rclcpp::Service<unitree_msgs::srv::SetControMode>::SharedPtr set_contro_mode_srv_;
+  rclcpp::Service<unitree_msgs::srv::SetControlMode>::SharedPtr set_control_mode_srv_;
   realtime_tools::RealtimeBuffer<ControlMode> control_mode_rt_buffer_;
-  void setControlModeCallback(const std::shared_ptr<unitree_msgs::srv::SetControMode::Request> request,
-                              std::shared_ptr<unitree_msgs::srv::SetControMode::Response> response);
+  void setControlModeCallback(const std::shared_ptr<unitree_msgs::srv::SetControlMode::Request> request,
+                              std::shared_ptr<unitree_msgs::srv::SetControlMode::Response> response);
 };
 
 } // namespace unitree_controller
